@@ -1,0 +1,27 @@
+body{background-color:rgba(22, 160, 133,1.0);}
+
+#record-by-date {}
+#record-by-date fieldset {}
+#record-by-date fieldset legend {color:#fff;font-size:35px;padding:20px;}
+#record-by-date fieldset ol {}
+#record-by-date fieldset ol li {padding:10px 20px 15px 20px;}
+#record-by-date fieldset ol li label {display:block;color:#fff;font-size:17px;}
+#record-by-date fieldset ol li select {display:block;font-size:17px;margin:5px 0 0 0;padding:5px 10px;border:none;width:320px;}
+#record-by-date fieldset .control {padding:20px;}
+#record-by-date fieldset .control input {background:#ecf0f1;color:#000;font-size:15px;padding:10px 25px;display:inline-block;margin:0 15px 0 0;border:none;}
+
+#exercise-graph {}
+#exercise-graph fieldset {}
+#exercise-graph fieldset legend {color:#fff;font-size:35px;padding:20px;}
+#exercise-graph fieldset ol {}
+#exercise-graph fieldset ol li {padding:10px 20px 15px 20px;}
+#exercise-graph fieldset ol li label {display:block;color:#fff;font-size:17px;}
+#exercise-graph fieldset ol li select {display:block;font-size:17px;margin:5px 0 0 0;padding:5px 10px;border:none;width:320px;}
+#exercise-graph fieldset .control {padding:20px;}
+#exercise-graph fieldset .control input {background:#ecf0f1;color:#000;font-size:15px;padding:10px 25px;display:inline-block;margin:0 15px 0 0;border:none;}
+
+#graph {margin:20px auto;}
+
+#records {}
+#records li {padding:10px 20px 15px 20px;display:block;color:#fff;font-size:17px;}
+#records li a {display:inline-block;margin:0 20px 0 0;text-decoration:none;color:#fff;}
