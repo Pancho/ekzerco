@@ -74,8 +74,10 @@ var EkzercoOverview = (function () {
 
 				$('#records').empty();
 
-				DB.selectRecordsByDate(null, function (record, event) {
-					$('#records').append('<li data-pk="' + record.pk + '"><a class="remove" href="" title="Remove this entry">X</a>' + record.exercise + ' (' + record.amount + ' ' + r.humanizeAmount(record) + ', ' + Utils.toHourMinute(record.date) + ')</li>');
+				DB.selectRecordsByDate(null, function (records, event) {
+					$.each(records, function (i, record) {
+						$('#records').append('<li data-pk="' + record.pk + '"><a class="remove" href="" title="Remove this entry">X</a>' + record.exercise + ' (' + record.amount + ' ' + r.humanizeAmount(record) + ', ' + Utils.toHourMinute(record.date) + ')</li>');
+					});
 				}, null, DB.getKeyRange().bound(start, end, true, true));
 			});
 
