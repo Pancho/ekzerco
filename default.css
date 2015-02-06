@@ -17,3 +17,5 @@ form fieldset .control input {cursor:pointer;background:#ecf0f1;color:#000;font-
 #menu li a {display:block;padding:10px;text-decoration:none;color:rgba(44, 62, 80,1.0);}
 #menu li a span.fa {display:block;text-align:center;width:100%;font-size:20px;margin:0 0 5px 0;}
 #menu li a span.text {display:block;text-align:center;width:100%;font-size:12px;}
+
+.notification {margin:20px;padding:20px;font-size:15px;background-color:rgba(241, 196, 15,1.0);color:#000;}

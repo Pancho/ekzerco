@@ -18,7 +18,8 @@ var Ekzerco = (function () {
 							'<input type="submit" class="button" name="add" id="add" value="Add" />' +
 						'</div>' +
 					'</fieldset>' +
-				'</form>');
+				'</form>'),
+				disabled = false;
 
 			DB.getExercises(function (exercises) {
 				$.each(exercises, function (i, exercise) {
@@ -41,10 +42,23 @@ var Ekzerco = (function () {
 						unitPlural: selectedExercise.data('unitplural'),
 						amount: parseInt($('#amount').val(), 10),
 						date: new Date()
-					};
+					}, notification = $('<p class="notification">Exercise added</p>');
 				ev.preventDefault();
 
+				if (disabled) {
+					return;
+				}
+
+				disabled = true;
 				DB.addRecords(record);
+
+				form.after(notification);
+
+				// Don't allow saving a new record for 2 seconds.
+				setTimeout(function () {
+					disabled = false;
+					notification.fadeOut();
+				}, 2000);
 			});
 
 			$('body').append(form);
