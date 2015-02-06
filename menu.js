@@ -1,7 +1,7 @@
 var EkzercoMenu = (function () {
 	var r = {
-		subfolder: '', // You might want to change this, depending on deployment
-//		subfolder: 'ekzerco/', // You might want to change this, depending on deployment
+//		subfolder: '', // You might want to change this, depending on deployment
+		subfolder: 'ekzerco/', // You might want to change this, depending on deployment
 		initMenu: function () {
 			var html = $('<ul id="menu">' +
 					'<li class="activity"><a href="/' + r.subfolder + '"><span class="fa fa-plus-square"></span><span class="text">Record Activity</span></a></li>' +

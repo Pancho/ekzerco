@@ -38,4 +38,3 @@ jQuery2 - do not thread on the web without this (included though). Would work wi
 
 ### Future
 * Offline mode
-* Adding exercises
