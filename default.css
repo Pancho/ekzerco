@@ -5,13 +5,13 @@ form fieldset legend {color:#fff;font-size:35px;padding:0 0 20px 0;}
 form fieldset ol {}
 form fieldset ol li {padding:10px 0 15px 0;}
 form fieldset ol li label {display:block;color:#fff;font-size:17px;}
-form fieldset ol li input {display:block;font-size:17px;margin:5px 0 0 0;padding:5px 10px;border:none;width:300px;}
-form fieldset ol li select {display:block;font-size:17px;margin:5px 0 0 0;padding:5px 10px;border:none;width:320px;}
+form fieldset ol li input {display:block;font-size:17px;margin:5px 0 0 0;padding:5px 10px;border:none;width:85%;max-width:300px;}
+form fieldset ol li select {display:block;font-size:17px;margin:5px 0 0 0;padding:5px 10px;border:none;width:90%;max-width:320px;}
 form fieldset .control {padding:20px 0 0 0;}
 form fieldset .control input {cursor:pointer;background:#ecf0f1;color:#000;font-size:15px;padding:10px 25px;display:inline-block;margin:0 15px 0 0;border:none;}
 
 #menu {background-color:rgba(236, 240, 241,1.0);}
-#menu li {display:inline-block;width:120px;vertical-align:top;}
+#menu li {display:inline-block;width:100px;height:65px;vertical-align:top;}
 #menu li.selected {background-color:rgba(44, 62, 80,1.0);}
 #menu li.selected a {color:rgba(236, 240, 241,1.0);}
 #menu li a {display:block;padding:10px;text-decoration:none;color:rgba(44, 62, 80,1.0);}
