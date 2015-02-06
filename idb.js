@@ -81,9 +81,13 @@ var DB = (function () {
 					    };
 
 					    cursorRequest.onsuccess = function(event) {
-					        var cursor = event.target.result;
+					        var cursor = event.target.result,
+								blob = {};
+
 					        if (cursor) {
-					            items.push(cursor.value);
+						        blob = cursor.value;
+								blob.pk = cursor.primaryKey;
+					            items.push(blob);
 					            cursor.continue();
 					        }
 					    };
@@ -129,11 +133,16 @@ var DB = (function () {
 						request.onsuccess = callback || function (event) {};
 					};
 
-					u['add' + capitalized] = function (blob) {
+					u['add' + capitalized] = function (blob, callback) {
 						var transaction = r.db.transaction(value, 'readwrite'),
-							store = transaction.objectStore(value);
+							store = transaction.objectStore(value),
+							request = store.add(blob);
 
-						store.add(blob);
+						callback = callback || function () {}
+
+						request.onsuccess = function (event) {
+							callback(event);
+						}
 					}
 				});
 

@@ -1,6 +1,7 @@
 var EkzercoMenu = (function () {
 	var r = {
-		subfolder: 'ekzerco/', // You might want to change this, depending on deployment
+		subfolder: '', // You might want to change this, depending on deployment
+//		subfolder: 'ekzerco/', // You might want to change this, depending on deployment
 		initMenu: function () {
 			var html = $('<ul id="menu">' +
 					'<li class="activity"><a href="/' + r.subfolder + '"><span class="fa fa-plus-square"></span><span class="text">Record Activity</span></a></li>' +
@@ -10,7 +11,7 @@ var EkzercoMenu = (function () {
 
 			$('body').prepend(html);
 
-			if (window.location.href.indexOf('add-activity') > -1) {
+			if (window.location.href.indexOf('add-exercise') > -1) {
 				$('.add').addClass('selected');
 			} else if (window.location.href.indexOf('overview') > -1) {
 				$('.overview').addClass('selected');
