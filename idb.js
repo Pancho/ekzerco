@@ -143,9 +143,6 @@ var DB = (function () {
 			request.onupgradeneeded = function (event) {
 				var db = event.target.result,
 					transaction = event.target.transaction;
-				//var db = event.target.result,
-				//	exercises = {},
-				//	records = {};
 
 				$.each(DBConfig.stores, function (storeName, config) {
 					if (config.actionOnUpgrade === 'drop') {
@@ -181,26 +178,6 @@ var DB = (function () {
 				});
 
 				console.log('"onupgradeneeded" finished');
-
-
-				//if (db.objectStoreNames.contains('exercises')) {
-				//	db.deleteObjectStore('exercises');
-				//}
-				//exercises = db.createObjectStore('exercises', {autoIncrement: true});
-				//exercises.createIndex('name', 'name', { unique: false });
-				//exercises.createIndex('unit', 'unit', { unique: false });
-				//
-				//if (!db.objectStoreNames.contains('records')) {
-				//	records = db.createObjectStore('records', {autoIncrement: true});
-				//	records.createIndex('exercise', 'exercise', { unique: false });
-				//	records.createIndex('unit', 'unit', { unique: false });
-				//	records.createIndex('amount', 'amount', { unique: false });
-				//	records.createIndex('date', 'date', { unique: false });
-				//}
-				//
-				//$.each(r.fixtures.exercises, function (i, exercise) {
-				//	exercises.add(exercise);
-				//});
 			};
 
 			return this;
