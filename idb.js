@@ -1,49 +1,45 @@
 var DB = (function () {
 	var r = {
 		db: null,
-		dbRequest: null,
-		version: 1,
 		indexedDB: null,
 		deferred: null,
 		IDBKeyRange: null,
-		fixtures: {
-			exercises: [
-				{
-					name: 'Push ups',
-					unit: 'repetition',
-					unitPlural: 'repetitions'
-				},
-				{
-					name: 'Squat',
-					unit: 'repetition',
-					unitPlural: 'repetitions'
-				},
-				{
-					name: 'Crunches',
-					unit: 'repetition',
-					unitPlural: 'repetitions'
-				},
-				{
-					name: 'Power jump',
-					unit: 'repetition',
-					unitPlural: 'repetitions'
-				},
-				{
-					name: 'Burpee',
-					unit: 'repetition',
-					unitPlural: 'repetitions'
-				},
-				{
-					name: 'Jump rope',
-					unit: 'minutes',
-					unitPlural: 'minutes'
-				},
-				{
-					name: 'Running',
-					unit: 'kilometers',
-					unitPlural: 'kilometers'
-				}
-			]
+		capitalize: function (string) {
+			return string.charAt(0).toUpperCase() + string.slice(1);
+		},
+		getAllRecords: function (transaction, storeName, callback) {
+			var store = transaction.objectStore(storeName),
+				cursorRequest = store.openCursor(),
+				items = [];
+
+		    transaction.oncomplete = function(event) {
+		        callback(items, event);
+		    };
+
+		    cursorRequest.onsuccess = function(event) {
+		        var cursor = event.target.result;
+		        if (cursor) {
+		            items.push(cursor.value);
+		            cursor.continue();
+		        }
+		    };
+		},
+		resetStore: function (db, storeName, indices, fixtures) {
+			var store = null;
+
+			if (db.objectStoreNames.contains(storeName)) {
+				db.deleteObjectStore(storeName);
+			}
+
+			store = db.createObjectStore(storeName, {autoIncrement: true});
+
+			$.each(indices, function (i, indexConfig) {
+				store.createIndex(indexConfig.name, indexConfig.name, { unique: !!indexConfig.unique});
+			});
+
+			$.each(fixtures || [], function (i, blob) {
+				store.add(blob);
+			});
 		}
 	}, u = {
 		onReady: function (callback) {
@@ -53,24 +49,26 @@ var DB = (function () {
 			return r.IDBKeyRange;
 		},
 		initialize: function () {
+			var request = null;
+
 			r.deferred = $.Deferred();
 
 			r.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
 			r.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange || window.msIDBKeyRange;
 
-			r.dbRequest = r.indexedDB.open(DBConfig.name, r.version);
+			request = r.indexedDB.open(DBConfig.name, DBConfig.version);
 
-			r.dbRequest.onerror = function (event) {
+			request.onerror = function (event) {
 				// Nothing to see here. Oh wait, nothing to see, if this doesn't work
 			};
 
-			r.dbRequest.onsuccess = function (event) {
-				r.db = r.dbRequest.result;
+			request.onsuccess = function (event) {
+				r.db = request.result;
 
 				// When constructing these methods, I could use idbconfig, but should anything be misconfigured, I
 				// would really not want everything to stop working.
 				$.each(r.db.objectStoreNames, function (key, value) {
-					var capitalized = Utils.capitalize(value);
+					var capitalized = r.capitalize(value);
 
 					u['get' + capitalized] = function (callback) {
 						var transaction = r.db.transaction(value),
@@ -92,7 +90,7 @@ var DB = (function () {
 					};
 
 					$.each(r.db.transaction(value).objectStore(value).indexNames, function (i, indexName) {
-						u['select' + capitalized + 'By' + Utils.capitalize(indexName)] = function (condition, callback, error, keyRange) {
+						u['select' + capitalized + 'By' + r.capitalize(indexName)] = function (condition, callback, error, keyRange) {
 							var transaction = r.db.transaction(value, 'readonly'),
 								store = transaction.objectStore(value),
 								index = store.index(indexName),
@@ -142,60 +140,67 @@ var DB = (function () {
 				r.deferred.resolve();
 			};
 
-			r.dbRequest.onupgradeneeded = function (event) {
+			request.onupgradeneeded = function (event) {
 				var db = event.target.result,
-					exercises = {},
-					records = {},
-					getAllRecords = function (storeName, callback) {
-						var transaction = db.transaction(value),
-							store = transaction.objectStore(value),
-							cursorRequest = store.openCursor(),
-							items = [];
-
-					    transaction.oncomplete = function(event) {
-					        callback(items, event);
-					    };
-
-					    cursorRequest.onsuccess = function(event) {
-					        var cursor = event.target.result;
-					        if (cursor) {
-					            items.push(cursor.value);
-					            cursor.continue();
-					        }
-					    };
-					};
+					transaction = event.target.transaction;
+				//var db = event.target.result,
+				//	exercises = {},
+				//	records = {};
 
 				$.each(DBConfig.stores, function (storeName, config) {
-					if (config.actionOnUpgrade === 'empty') {
-						
+					if (config.actionOnUpgrade === 'drop') {
+						if (db.objectStoreNames.contains(storeName)) {
+							db.deleteObjectStore(storeName);
+						}
+					} else if (config.actionOnUpgrade === 'empty') {
+						r.resetStore(db, storeName, config.indices, config.fixtures);
 					} else if (config.actionOnUpgrade === 'preserve') {
-
+						if (db.objectStoreNames.contains(storeName)) {
+							r.getAllRecords(transaction, storeName, function (items) {
+								r.resetStore(db, storeName, config.indices, items);
+							});
+						} else {
+							r.resetStore(db, storeName, config.indices, config.fixtures);
+						}
 					} else if (config.actionOnUpgrade === 'semiSmart') {
+						if (db.objectStoreNames.contains(storeName)) {
+							r.getAllRecords(transaction, storeName, function (items) {
+								if (items && items.length) {
+									r.resetStore(db, storeName, config.indices, items);
+								} else {
+									r.resetStore(db, storeName, config.indices, config.fixtures);
+								}
+							});
+						} else {
+							r.resetStore(db, storeName, config.indices, config.fixtures);
+						}
 
 					} else if (config.actionOnUpgrade === 'smart') {
 						console.log('Smart... LOL');
 					}
 				});
 
+				console.log('"onupgradeneeded" finished');
 
-				if (db.objectStoreNames.contains('exercises')) {
-					db.deleteObjectStore('exercises');
-				}
-				exercises = db.createObjectStore('exercises', {autoIncrement: true});
-				exercises.createIndex('name', 'name', { unique: false });
-				exercises.createIndex('unit', 'unit', { unique: false });
 
-				if (!db.objectStoreNames.contains('records')) {
-					records = db.createObjectStore('records', {autoIncrement: true});
-					records.createIndex('exercise', 'exercise', { unique: false });
-					records.createIndex('unit', 'unit', { unique: false });
-					records.createIndex('amount', 'amount', { unique: false });
-					records.createIndex('date', 'date', { unique: false });
-				}
-
-				$.each(r.fixtures.exercises, function (i, exercise) {
-					exercises.add(exercise);
-				});
+				//if (db.objectStoreNames.contains('exercises')) {
+				//	db.deleteObjectStore('exercises');
+				//}
+				//exercises = db.createObjectStore('exercises', {autoIncrement: true});
+				//exercises.createIndex('name', 'name', { unique: false });
+				//exercises.createIndex('unit', 'unit', { unique: false });
+				//
+				//if (!db.objectStoreNames.contains('records')) {
+				//	records = db.createObjectStore('records', {autoIncrement: true});
+				//	records.createIndex('exercise', 'exercise', { unique: false });
+				//	records.createIndex('unit', 'unit', { unique: false });
+				//	records.createIndex('amount', 'amount', { unique: false });
+				//	records.createIndex('date', 'date', { unique: false });
+				//}
+				//
+				//$.each(r.fixtures.exercises, function (i, exercise) {
+				//	exercises.add(exercise);
+				//});
 			};
 
 			return this;
