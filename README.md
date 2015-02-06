@@ -18,6 +18,9 @@ I decided to use IndexedDB, but at least there are results :)
 Just copy the whole folder somewhere that's visible from the internet. I use my own website for that: 
 http://www.panco.si/ekzerco.
 
+You will need to change the root folder in menu.js. Since I'm deploying it on my own site, it's /exzerco, but you can 
+change it to whatever you wish, just be sure it works :)
+
 ### Limitation
 Because the app is using IndexedDB, there is no centralised database, so each user sees only what they enter and the 
 server sees no data. That certainly doesn't mean data cannot be collected, but that's not the purpose of this app.
@@ -37,4 +40,3 @@ jQuery2 - do not thread on the web without this (included though). Would work wi
 * Offline mode
 * Better UI (it sucks right now)
 * Adding exercises
-* Links to overview and adding exercises

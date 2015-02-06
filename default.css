@@ -1,12 +1,19 @@
-/*body {background-color:rgba(52,152,219,1);}*/
 body {background-color:rgba(192, 57, 43,1.0);}
-#new-record {}
-#new-record fieldset {margin:20px;}
-#new-record fieldset legend {color:#fff;font-size:35px;padding:0 0 20px 0;}
-#new-record fieldset ol {}
-#new-record fieldset ol li {padding:10px 0 15px 0;}
-#new-record fieldset ol li label {display:block;color:#fff;font-size:17px;}
-#new-record fieldset ol li input {display:block;font-size:17px;margin:5px 0 0 0;padding:5px 10px;border:none;width:300px;}
-#new-record fieldset ol li select {display:block;font-size:17px;margin:5px 0 0 0;padding:5px 10px;border:none;width:320px;}
-#new-record fieldset .control {padding:20px 0 0 0;}
-#new-record fieldset .control input {cursor:pointer;background:#ecf0f1;color:#000;font-size:15px;padding:10px 25px;display:inline-block;margin:0 15px 0 0;border:none;}
+form {}
+form fieldset {margin:20px;}
+form fieldset legend {color:#fff;font-size:35px;padding:0 0 20px 0;}
+form fieldset ol {}
+form fieldset ol li {padding:10px 0 15px 0;}
+form fieldset ol li label {display:block;color:#fff;font-size:17px;}
+form fieldset ol li input {display:block;font-size:17px;margin:5px 0 0 0;padding:5px 10px;border:none;width:300px;}
+form fieldset ol li select {display:block;font-size:17px;margin:5px 0 0 0;padding:5px 10px;border:none;width:320px;}
+form fieldset .control {padding:20px 0 0 0;}
+form fieldset .control input {cursor:pointer;background:#ecf0f1;color:#000;font-size:15px;padding:10px 25px;display:inline-block;margin:0 15px 0 0;border:none;}
+
+#menu {background-color:rgba(236, 240, 241,1.0);}
+#menu li {display:inline-block;width:120px;vertical-align:top;}
+#menu li.selected {background-color:rgba(44, 62, 80,1.0);}
+#menu li.selected a {color:rgba(236, 240, 241,1.0);}
+#menu li a {display:block;padding:10px;text-decoration:none;color:rgba(44, 62, 80,1.0);}
+#menu li a span.fa {display:block;text-align:center;width:100%;font-size:20px;margin:0 0 5px 0;}
+#menu li a span.text {display:block;text-align:center;width:100%;font-size:12px;}
