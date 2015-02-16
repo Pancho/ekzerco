@@ -138,7 +138,7 @@ var DB = (function () {
 							store = transaction.objectStore(value),
 							request = store.add(blob);
 
-						callback = callback || function () {}
+						callback = callback || function () {};
 
 						request.onsuccess = function (event) {
 							callback(event);

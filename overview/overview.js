@@ -186,8 +186,6 @@ var EkzercoOverview = (function () {
 				$('#graph').empty();
 				dates = r.getDates(span);
 
-				console.log(dates);
-
 				$.each(dates, function (i, date) {
 					var shortDate = Utils.toPrettyDate(date),
 						records = byDate[shortDate];

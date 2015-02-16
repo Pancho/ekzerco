@@ -6,7 +6,7 @@ form fieldset ol {}
 form fieldset ol li {padding:10px 0 15px 0;}
 form fieldset ol li label {display:block;color:#fff;font-size:17px;}
 form fieldset ol li input {display:block;font-size:17px;margin:5px 0 0 0;padding:5px 10px;border:none;width:85%;max-width:300px;}
-form fieldset ol li select {display:block;font-size:17px;margin:5px 0 0 0;padding:5px 10px;border:none;width:90%;max-width:320px;}
+form fieldset ol li select {display:block;font-size:17px;margin:5px 0 0 0;padding:5px 10px;border:none;width:92%;max-width:320px;}
 form fieldset .control {padding:20px 0 0 0;}
 form fieldset .control input {cursor:pointer;background:#ecf0f1;color:#000;font-size:15px;padding:10px 25px;display:inline-block;margin:0 15px 0 0;border:none;}
 
