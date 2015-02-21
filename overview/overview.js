@@ -49,7 +49,7 @@ var EkzercoOverview = (function () {
 				'</form>' +
 				'<ol id="records"></ol>');
 
-			DB.getRecords(function (records) {
+			DB.records.all(function (records) {
 				var dates = [];
 				records.sort(function (a, b) {
 					return b.date - a.date;
@@ -74,7 +74,7 @@ var EkzercoOverview = (function () {
 
 				$('#records').empty();
 
-				DB.selectRecordsByDate(null, function (records, event) {
+				DB.records.select.byDate(null, function (records, event) {
 					$.each(records, function (i, record) {
 						$('#records').append('<li data-pk="' + record.pk + '"><a class="remove" href="" title="Remove this entry">X</a>' + record.exercise + ' (' + record.amount + ' ' + r.humanizeAmount(record) + ', ' + Utils.toHourMinute(record.date) + ')</li>');
 					});
@@ -85,7 +85,7 @@ var EkzercoOverview = (function () {
 				var listItem = $(this).closest('li');
 				ev.preventDefault();
 
-				DB.deleteRecords(parseInt(listItem.data('pk'), 10), function () {
+				DB.records.remove(parseInt(listItem.data('pk'), 10), function () {
 					listItem.remove();
 				});
 			});
@@ -132,7 +132,7 @@ var EkzercoOverview = (function () {
 				dates = [],
 				byDate = {};
 
-			DB.getRecords(function (records) {
+			DB.records.all(function (records) {
 				var exercises = [];
 				records.sort(function (a, b) {
 					return a.date - b.date;

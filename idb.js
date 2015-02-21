@@ -68,82 +68,89 @@ var DB = (function () {
 				// When constructing these methods, I could use idbconfig, but should anything be misconfigured, I
 				// would really not want everything to stop working.
 				$.each(r.db.objectStoreNames, function (key, value) {
-					var capitalized = r.capitalize(value);
-
-					u['get' + capitalized] = function (callback) {
-						var transaction = r.db.transaction(value),
-							store = transaction.objectStore(value),
-							cursorRequest = store.openCursor(),
-							items = [];
-
-					    transaction.oncomplete = function(event) {
-					        callback(items, event);
-					    };
-
-					    cursorRequest.onsuccess = function(event) {
-					        var cursor = event.target.result,
-								blob = {};
-
-					        if (cursor) {
-						        blob = cursor.value;
-								blob.pk = cursor.primaryKey;
-					            items.push(blob);
-					            cursor.continue();
-					        }
-					    };
-					};
-
-					$.each(r.db.transaction(value).objectStore(value).indexNames, function (i, indexName) {
-						u['select' + capitalized + 'By' + r.capitalize(indexName)] = function (condition, callback, error, keyRange) {
-							var transaction = r.db.transaction(value, 'readonly'),
+					u[value] = {
+						add: function (blob, callback) {
+							var transaction = r.db.transaction(value, 'readwrite'),
 								store = transaction.objectStore(value),
-								index = store.index(indexName),
-								request = null,
-								result = [];
+								request = store.add(blob);
 
-							request = index.openCursor(keyRange || r.IDBKeyRange.only(condition, true));
-
-							request.onerror = error || function (event) {
-								console.log('Error', event);
-							};
-
-							transaction.oncomplete = function (event) {
-								callback(result, event);
+							callback = callback || function () {
 							};
 
 							request.onsuccess = function (event) {
-								var cursor = event.target.result,
+								callback(event);
+							}
+						},
+						all: function (callback) {
+							var transaction = r.db.transaction(value),
+								store = transaction.objectStore(value),
+								cursorRequest = store.openCursor(),
+								items = [];
+
+							callback = callback || function () {};
+
+						    transaction.oncomplete = function(event) {
+						        callback(items, event);
+						    };
+
+						    cursorRequest.onsuccess = function(event) {
+						        var cursor = event.target.result,
 									blob = {};
 
-								if (cursor) {
-									blob = cursor.value;
+						        if (cursor) {
+							        blob = cursor.value;
 									blob.pk = cursor.primaryKey;
-									result.push(blob);
-									cursor.continue();
-								}
+						            items.push(blob);
+						            cursor.continue();
+						        }
+						    };
+						},
+						remove: function (pk, callback) {
+							var transaction = r.db.transaction(value, 'readwrite'),
+								store = transaction.objectStore(value),
+								request = store.delete(pk);
+
+							callback = callback || function () {};
+
+							request.onsuccess = callback || function (event) {
 							};
-						};
-					});
+						},
+						select: (function () {
+							var result = {};
 
-					u['delete' + capitalized] = function (pk, callback) {
-						var transaction = r.db.transaction(value, 'readwrite'),
-							store = transaction.objectStore(value),
-							request = store.delete(pk);
+							$.each(r.db.transaction(value).objectStore(value).indexNames, function (i, indexName) {
+								result['by' + r.capitalize(indexName)] = function (condition, callback, error, keyRange) {
+									var transaction = r.db.transaction(value, 'readonly'),
+										store = transaction.objectStore(value),
+										index = store.index(indexName),
+										request = index.openCursor(keyRange || r.IDBKeyRange.only(condition, true)),
+										result = [];
 
-						request.onsuccess = callback || function (event) {};
+									request.onerror = error || function (event) {
+										console.log('Error', event);
+									};
+
+									transaction.oncomplete = function (event) {
+										callback(result, event);
+									};
+
+									request.onsuccess = function (event) {
+										var cursor = event.target.result,
+											blob = {};
+
+										if (cursor) {
+											blob = cursor.value;
+											blob.pk = cursor.primaryKey;
+											result.push(blob);
+											cursor.continue();
+										}
+									};
+								};
+							});
+
+							return result;
+						}())
 					};
-
-					u['add' + capitalized] = function (blob, callback) {
-						var transaction = r.db.transaction(value, 'readwrite'),
-							store = transaction.objectStore(value),
-							request = store.add(blob);
-
-						callback = callback || function () {};
-
-						request.onsuccess = function (event) {
-							callback(event);
-						}
-					}
 				});
 
 				r.deferred.resolve();

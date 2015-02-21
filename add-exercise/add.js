@@ -42,9 +42,9 @@ var EkzercoAdd = (function () {
 
 				disabled = true;
 
-				DB.selectExercisesByName($('#name').val(), function (data) {
+				DB.exercises.select.byName($('#name').val(), function (data) {
 					if (!data[0] || data[0].name !== $('#name').val()) {
-						DB.addExercises({
+						DB.exercises.add({
 							name: $('#name').val(),
 							unit: $('#unit').val(),
 							unitPlural: $('#unitplural').val()
@@ -61,7 +61,7 @@ var EkzercoAdd = (function () {
 				});
 			});
 
-			DB.getExercises(function (exercises) {
+			DB.exercises.all(function (exercises) {
 				$.each(exercises, function (i, exercise) {
 					$('#records').append('<li data-pk="' + exercise.pk + '"><a class="remove" href="" title="Remove this entry">X</a>' + exercise.name + '</li>');
 				});
@@ -71,7 +71,7 @@ var EkzercoAdd = (function () {
 				var listItem = $(this).closest('li');
 				ev.preventDefault();
 
-				DB.deleteExercises(parseInt(listItem.data('pk'), 10), function () {
+				DB.exercises.remove(parseInt(listItem.data('pk'), 10), function () {
 					listItem.remove();
 				});
 			});

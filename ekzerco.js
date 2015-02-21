@@ -21,7 +21,7 @@ var Ekzerco = (function () {
 				'</form>'),
 				disabled = false;
 
-			DB.getExercises(function (exercises) {
+			DB.exercises.all(function (exercises) {
 				$.each(exercises, function (i, exercise) {
 					form.find('select').append('<option value="' + exercise.name + '" data-unit="' + exercise.unit + '" data-unitplural="' + exercise.unitPlural + '">' + Utils.capitalize(exercise.name) + '</option>');
 					if (i === 0) {
@@ -50,7 +50,7 @@ var Ekzerco = (function () {
 				}
 
 				disabled = true;
-				DB.addRecords(record);
+				DB.records.add(record);
 
 				form.after(notification);
 
