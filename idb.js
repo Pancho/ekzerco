@@ -156,7 +156,7 @@ var DB = (function () {
 				r.deferred.resolve();
 			};
 
-			request.onupgradeneeded = function (event) {
+			request.onupgradeneeded = DBConfig.onupgradeneeded || function (event) {
 				var db = event.target.result,
 					transaction = event.target.transaction;
 
