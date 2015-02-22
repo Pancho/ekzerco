@@ -39,7 +39,7 @@ implementation is very naive and requires additional configuration in the config
 
 Exporting, as far as idb.js is concerned, returns a list of JS objects, which are not sorted and are not separated by 
 stores. However each object has storeName property set, which tells the import method to which store it belongs. 
-There's another property that gets attached: key. Key tells the imported against which index in that store to check 
+There's another property that gets attached: key. Key tells the importer against which index in that store to check 
 whether the exported record already exists (one doesn't want to override an existing record).
    
 Importing might also need "recovery rules". For instance, should any of your records contain non-simple (or JSON 
