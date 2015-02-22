@@ -27,6 +27,8 @@ var DBConfig = {
 			event.target.result.
 			 */
 			actionOnUpgrade: 'semiSmart',
+			// Keys are used for importing; when importing data from a file, this key will be tested against existing data so that nothing gets overwritten.
+			key: 'name',
 			// AFAIK, and I'm really truly no expert, you can only search on indexed fields.
 			indices: [
 				{
@@ -82,7 +84,20 @@ var DBConfig = {
 		},
 		records: {
 			actionOnUpgrade: 'preserve',
-			// AFAIK, and I'm really truly no expert, you can only search on indexed fields.
+			key: 'date',
+			// If you have non simple types (int, string), then you need to specify it here. Currently only date is supported.
+			keyType: 'date',
+			// This is also used for importing and exporting.
+			// When importing, some objects need to be recovered (for instance, dates)
+			// Currently supported types only include dates ("date"), but this can be nested ad-infinitum, as such:
+			// {
+			//      profile: {
+			//			joined: 'date'
+			//      }
+			// }
+			recoveryRules: {
+				date: 'date'
+			},
 			indices: [
 				{
 					name: 'exercise',

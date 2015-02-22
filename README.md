@@ -33,6 +33,22 @@ specific store bound by some simple rules). Should you really need some of those
 But in that case, I'd advise against IndexedDB altogether. Some improvements are bound to happen if I need them. And 
 since it's open source, feel free to add things.
 
+### Import and Export
+This app has a non-exposed URL (/data) on which you can export and import the data from your IndexedDB. The 
+implementation is very naive and requires additional configuration in the config file.
+
+Exporting, as far as idb.js is concerned, returns a list of JS objects, which are not sorted and are not separated by 
+stores. However each object has storeName property set, which tells the import method to which store it belongs. 
+There's another property that gets attached: key. Key tells the imported against which index in that store to check 
+whether the exported record already exists (one doesn't want to override an existing record).
+   
+Importing might also need "recovery rules". For instance, should any of your records contain non-simple (or JSON 
+stringifiable values), you might need to recover those values when importing data. It's done so that you specify 
+"recoveryRules" property for your store in the config file. It' is a simple object where the key is the key name from 
+the record and value is the "protocol" that's used to recover the data into the right format. Dates were only such type 
+encountered, so only this type was implemented. But since IndexedDB is a document store, the recovery and the rules can 
+be as deep as you want: recover the dates that are on profile objects which are a property of user object.
+
 ### Dependencies
 jQuery2 - do not thread on the web without this (included though). Would work with jQuery1 too.
 

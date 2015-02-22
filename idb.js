@@ -40,6 +40,17 @@ var DB = (function () {
 			$.each(fixtures || [], function (i, blob) {
 				store.add(blob);
 			});
+		},
+		recover: function (record, rules) {
+			$.each(rules, function (key, rule) {
+				if (typeof rule === 'object') {
+					record[key] = r.recover(record[key], rule);
+				} else if (rule === 'date') {
+					record[key] = new Date(record[key]);
+				}
+			});
+
+			return record;
 		}
 	}, u = {
 		onReady: function (callback) {
@@ -47,6 +58,59 @@ var DB = (function () {
 		},
 		getKeyRange: function () {
 			return r.IDBKeyRange;
+		},
+		import: function (list) {
+			$.each(list, function (i, item) {
+				var storeName = item.storeName,
+					key = item.key,
+					selectKey = Utils.capitalize(key),
+					condition = null;
+
+				// Clean metadata
+				delete item['storeName'];
+				delete item['key'];
+
+				if (DBConfig.stores[storeName].keyType === 'date') {
+					condition = new Date(item[key]);
+				} else {
+					condition = item[key];
+				}
+
+				u[storeName].select['by' + selectKey](condition, function (data) {
+					if (!data || !data.length) {
+						console.log('Adding item', item);
+						u[storeName].add(r.recover(item, DBConfig.stores[storeName].recoveryRules));
+					}
+				});
+			});
+		},
+		export: function (callback) {
+			var transaction = r.db.transaction(r.db.objectStoreNames),
+				store = null,
+				cursorRequest = null,
+				result = [];
+
+			transaction.oncomplete = function(event) {
+		        callback(result, event);
+		    };
+
+			$.each(r.db.objectStoreNames, function (i, storeName) {
+				store = transaction.objectStore(storeName);
+				cursorRequest = store.openCursor();
+
+				cursorRequest.onsuccess = function(event) {
+			        var cursor = event.target.result,
+						blob = {};
+
+			        if (cursor) {
+				        blob = cursor.value;
+						blob.storeName = storeName;
+				        blob.key = DBConfig.stores[storeName].key;
+			            result.push(blob);
+			            cursor.continue();
+			        }
+			    };
+			});
 		},
 		initialize: function () {
 			var request = null;
@@ -65,7 +129,7 @@ var DB = (function () {
 			request.onsuccess = function (event) {
 				r.db = request.result;
 
-				// When constructing these methods, I could use idbconfig, but should anything be misconfigured, I
+				// When constructing these methods, I could use idbconfig, but should anything be wrongly configured, I
 				// would really not want everything to stop working.
 				$.each(r.db.objectStoreNames, function (key, value) {
 					u[value] = {
