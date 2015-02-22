@@ -78,7 +78,6 @@ var DB = (function () {
 
 				u[storeName].select['by' + selectKey](condition, function (data) {
 					if (!data || !data.length) {
-						console.log('Adding item', item);
 						u[storeName].add(r.recover(item, DBConfig.stores[storeName].recoveryRules));
 					}
 				});
