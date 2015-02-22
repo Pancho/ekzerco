@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Ekzerco - Track your exercises, no strings attached</title>
+		<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans" />
+		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+		<link rel="stylesheet" type="text/css" href="../reset.css" />
+		<link rel="stylesheet" type="text/css" href="../default.css" />
+		<link rel="stylesheet" type="text/css" href="data.css" />
+		<meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,width=device-width" />
+	</head>
+	<body>
+		<h1>Export Data</h1>
+		<ol id="records">
+			<li><a id="export" class="button" href="" download="ekzerco-data.json">Download</a></li>
+		</ol>
+		<form action="" id="import-form" method="post" enctype="multipart/form-data">
+			<fieldset>
+				<legend>Import Data</legend>
+				<ol>
+					<li>
+						<label for="file">Chose File</label>
+						<input type="file" name="file" id="file" required="required" placeholder="Chose File" value="" />
+					</li>
+				</ol>
+				<div class="control">
+					<input type="submit" class="button" name="import" id="import" value="Import" />
+				</div>
+			</fieldset>
+		</form>
+		<script type="text/javascript" src="../jquery.js"></script>
+		<script type="text/javascript" src="../utils.js"></script>
+		<script type="text/javascript" src="../menu.js"></script>
+		<script type="text/javascript" src="../idbconfig.js"></script>
+		<script type="text/javascript" src="../idb.js"></script>
+		<script type="text/javascript" src="data.js"></script>
+	</body>
+</html>

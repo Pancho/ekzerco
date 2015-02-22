@@ -1,0 +1,10 @@
+body{background-color:rgba(106,34,160,1);}
+
+#graph {margin:20px auto;}
+
+h1 {color:#fff;font-size:35px;padding:0 0 20px 0;margin:20px 0 0 20px;}
+
+#records {margin:10px 20px 15px 20px;}
+#records li {display:block;color:#fff;font-size:17px;}
+#records li a {display:inline-block;margin:0 20px 0 0;text-decoration:none;color:#000;}
+#records li a.disabled {color:#f3f3f3;}
