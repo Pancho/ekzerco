@@ -11,7 +11,7 @@ var Ekzerco = (function () {
 							'</li>' +
 							'<li>' +
 								'<label for="amount" id="amount-name">Amount</label>' +
-								'<input type="number" name="amount" id="amount" required="required" placeholder="Insert a number" />' +
+								'<input type="number" step="any" name="amount" id="amount" required="required" placeholder="Insert a number" />' +
 							'</li>' +
 						'</ol>' +
 						'<div class="control">' +
@@ -40,7 +40,7 @@ var Ekzerco = (function () {
 						exercise: selectedExercise.attr('value'),
 						unit: selectedExercise.data('unit'),
 						unitPlural: selectedExercise.data('unitplural'),
-						amount: parseInt($('#amount').val(), 10),
+						amount: parseFloat($('#amount').val()),
 						date: new Date()
 					}, notification = $('<p class="notification">Exercise added</p>');
 				ev.preventDefault();
