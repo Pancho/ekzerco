@@ -147,8 +147,6 @@ var DB = (function () {
 
 			request = r.indexedDB.open(DBConfig.name, DBConfig.version);
 
-			console.log(request);
-
 			request.onerror = function (event) {
 				// Nothing to see here. Oh wait, nothing to see, if this doesn't work
 			};
@@ -199,8 +197,16 @@ var DB = (function () {
 						update: function (obj, callback) {
 							var transaction = r.db.transaction(value, 'readwrite'),
 								store = transaction.objectStore(value),
-								keyRange = r.IDBKeyRange.only(obj.pk),
-								cursorRequest = store.openCursor(keyRange);
+								keyRange = null,
+								cursorRequest = null;
+
+							if (!obj.pk) { // No primary key, no updating
+								u[value].add(obj, callback);
+								return;
+							}
+
+							keyRange = r.IDBKeyRange.only(obj.pk);
+							cursorRequest = store.openCursor(keyRange);
 
 							callback = callback || function () {};
 
